@@ -1,10 +1,12 @@
 from flask import Flask, request, jsonify
 from datetime import datetime
+import os
 
 app = Flask(__name__)
 
 recipes = []
 current_id = 1
+
 
 # POST /recipes
 @app.route('/recipes', methods=['POST'])
@@ -12,7 +14,6 @@ def create_recipe():
     global current_id
 
     data = request.get_json()
-
     required_fields = ["title", "making_time", "serves", "ingredients", "cost"]
 
     if not data or not all(field in data for field in required_fields):
@@ -113,5 +114,7 @@ def not_found(e):
     return "", 404
 
 
+# Run server (IMPORTANT for Render)
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=3000)
+    port = int(os.environ.get("PORT", 3000))
+    app.run(host='0.0.0.0', port=port)
